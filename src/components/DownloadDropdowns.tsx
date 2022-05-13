@@ -8,11 +8,13 @@ import { oses, arches, packageTypes, versions, defaultVersion, defaultArchitectu
 
 let defaultOS = 'any'
 let defaultArch = 'any'
+let defaultPkg = 'any'
 
 const DownloadDropdowns = ({updaterAction, marketplace, Table}) => {
 
     if (marketplace) {
         defaultArch = defaultArchitecture;
+        defaultPkg = defaultPackageType;
         const userOS = detectOS();
         switch (userOS) {
           case UserOS.MAC:
@@ -30,7 +32,7 @@ const DownloadDropdowns = ({updaterAction, marketplace, Table}) => {
 
     const [os, updateOS] = useState({os: defaultOS});
     const [arch, updateArch] = useState({arch: defaultArch});
-    const [packageType, updatePackageType] = useState({packageType: defaultPackageType});
+    const [packageType, updatePackageType] = useState({packageType: defaultPkg});
     const [version, udateVersion] = useState({version: defaultVersion});
     
     // Marketplace vendor selector only
@@ -93,7 +95,7 @@ const DownloadDropdowns = ({updaterAction, marketplace, Table}) => {
                 </div>
                 <div className="input-group-prepend flex-colunm col-12 col-md-3">
                     <label className="px-2 fw-bold" htmlFor="package-type">Package Type</label>
-                    <select id="package-type-filter" onChange={(e) => setPackageType(e.target.value)} defaultValue={defaultPackageType} className="form-select form-select-sm">
+                    <select id="package-type-filter" onChange={(e) => setPackageType(e.target.value)} defaultValue={defaultPkg} className="form-select form-select-sm">
                         <option key="any" value="any">Any</option>
                         {packageTypes.map(
                             (packageType, i): string | JSX.Element => packageType && (
@@ -103,7 +105,7 @@ const DownloadDropdowns = ({updaterAction, marketplace, Table}) => {
                     </select>
                 </div>
                 <div className="input-group-prepend flex-colunm col-12 col-md-3">
-                    <label className="px-2 fw-bold" htmlFor="version">Version</label>
+                    <label className="px-2 fw-bold" htmlFor="version">Java Version</label>
                     <select id="version-filter" onChange={(e) => setVersion(e.target.value)} defaultValue={defaultVersion} className="form-select form-select-sm">
                         {versions.map(
                             (version, i): string | JSX.Element => version && (

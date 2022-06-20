@@ -7,7 +7,7 @@ const repositories = [
 ];
 
 // List of users to exclude from random contributor
-const excludedContributors = ['dependabot-preview[bot]', 'dependabot[bot]', 'eclipse-temurin-bot'];
+const excludedContributors = ['dependabot-preview[bot]', 'dependabot[bot]', 'eclipse-temurin-bot', 'github-actions[bot]' ];
 
 const randomValue = (list) => {
     return list[Math.floor(Math.random() * list.length)];
@@ -86,8 +86,8 @@ async function getContributor(randomPage: number): Promise<Contributor> {
 }
 
 /**
- * Calls relative APIs and returns random contributor for Node.js main repo.
- * Trying to store cached data in localStorage in order to do less consequent requests
+ * Calls relative APIs and returns random contributor for repo.
+ * Trying to store cached data in localStorage in order to do fewer subsequent requests
  */
 async function fetchRandomContributor() {
   let maxContributors: number | null = null;
@@ -117,10 +117,11 @@ async function fetchRandomContributor() {
         Math.floor(Math.random() * Math.floor(maxContributors)) + 1
       );
     }
-    const [randomPage, lastPage] = await getMaxContributors();
-
+    let [randomPage, lastPage] = await getMaxContributors();
     let contributor = await getContributor(randomPage);
+
     while (excludedContributors.includes(contributor.login)) {
+      [randomPage, lastPage] = await getMaxContributors();
       contributor = await getContributor(randomPage);
     }
 

@@ -7,7 +7,7 @@ const repositories = [
 ];
 
 // List of users to exclude from random contributor
-const excludedContributors = ['dependabot-preview[bot]', 'dependabot[bot]', 'eclipse-temurin-bot'];
+const excludedContributors = ['dependabot-preview[bot]', 'dependabot[bot]', 'eclipse-temurin-bot', 'adoptium-bot'];
 
 const randomValue = (list) => {
     return list[Math.floor(Math.random() * list.length)];
@@ -117,12 +117,14 @@ async function fetchRandomContributor() {
         Math.floor(Math.random() * Math.floor(maxContributors)) + 1
       );
     }
-    const [randomPage, lastPage] = await getMaxContributors();
 
-    let contributor = await getContributor(randomPage);
-    while (excludedContributors.includes(contributor.login)) {
+    let randomPage: number, lastPage: number;
+    let contributor: Contributor | null = null;
+    do {
+      [randomPage, lastPage] = await getMaxContributors();
       contributor = await getContributor(randomPage);
     }
+    while (excludedContributors.includes(contributor.login))
 
     if (window.localStorage) {
       window.localStorage.setItem('fetch_date', String(Date.now()));

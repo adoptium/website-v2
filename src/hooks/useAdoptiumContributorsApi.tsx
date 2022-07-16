@@ -69,12 +69,17 @@ async function getMaxContributors(): Promise<[number, number]> {
 
 /**
  * Retrieves a contributor's object by it's index in API
+ * only return 'type: User' to filter out Bot
  * @param randomPage
  */
 async function getContributor(randomPage: number): Promise<Contributor> {
-  const response = await fetch(`${CONTRIBUTORS_API_URI}&page=${randomPage}`);
-  const contributor = (await response.json())[0] as ContributorApiResponse;
+  let responseJsonData: any = {};
+  do {
+    let response = await fetch(`${CONTRIBUTORS_API_URI}&page=${randomPage}`);
+    responseJsonData = await response.json();
+  } while (responseJsonData.type != "User")
 
+  const contributor = responseJsonData.id as ContributorApiResponse;
   return {
     avatarUri: contributor.avatar_url,
     commitsListUri: `https://github.com/adoptium/${repoToCheck}/commits?author=${contributor.login}`,
